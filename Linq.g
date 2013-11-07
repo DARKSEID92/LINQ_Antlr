@@ -1,25 +1,71 @@
-grammar Linq;
+grammar Linq;program	:	initial+
+	;
+initial	:	expr final
+	|	MA expr final
+	;
 
-ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
+final	:	 ';'
+	;
+
+expr	:	TD decl 
+	;
+
+decl	:	ID  '=' val
+	|	ID  '=' val signo
+	|	ID  signo
+	|	ID 
+	;
+signo	:	',' decl 
+	;
+val	:	INT
+	|	FLOAT
+	;
+
+
+    
+BOOLEAN	
+	:	'true'
+	|	'false'
+	;
+	
+MA	
+	:	'Public'
+	|	'Protected'
+	|	'Private'
+	|	'Final'
+	|	'Statict'
+	|	'Transfert'
+	|	'Volatile'
+	|	'Object'
+	;
+	
+TD	
+	:	'byte'
+	|	'Boolean'
+	|	'double'
+	|	'int'
+	|	'float'
+	|	'long'
+	|	'slust'
+	;
+
+
+ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')* 
     ;
 
-INT :	'0'..'9'+
-    ;
+INT 
+	:	'0'..'9'+
+   	;
 
 FLOAT
-    :   ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
-    |   '.' ('0'..'9')+ EXPONENT?
-    |   ('0'..'9')+ EXPONENT
-    ;
-
-COMMENT
-    :   '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
-    |   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
-    ;
+   	:   ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
+    	|   '.' ('0'..'9')+ EXPONENT?
+    	|   ('0'..'9')+ EXPONENT
+    	;
 
 STRING
-    :  '"' ( ESC_SEQ | ~('\\'|'"') )* '"'
-    ;
+    	:  '"' ( ESC_SEQ | ~('\\'|'"') )* '"'
+    	;
 
 fragment
 EXPONENT : ('e'|'E') ('+'|'-')? ('0'..'9')+ ;
@@ -45,3 +91,4 @@ fragment
 UNICODE_ESC
     :   '\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
     ;
+    
