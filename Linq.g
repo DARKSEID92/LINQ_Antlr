@@ -1,58 +1,14 @@
 grammar Linq;
-<<<<<<< HEAD
 program	:	initial+
 	;
 
 initial	:	expr final
 	|	MA expr final
-=======
-
-program: initial+;
-
-initial: initialex;
-
-initialex: ifex | forex | switchex | whilex | dowhilex | funciones;
-
-
-
-ifex: 'If' '('  condicion ')' inbloque  accion finbloque else;
-else	:	
-	|'Else'inbloque  accion finbloque else
-;
-
-final	:	 ';' ;
-
-inbloque:	'{';
-
-finbloque
-	:	'}';
-
-forex: 'For' '(' iniciofor     final limitador   final mov   ')' inbloque accion  finbloque;
-
-whilex: 'While' '(' condicion')' inbloque accion  finbloque;
-
-dowhilex: 'Do' inbloque accion finbloque 'While' '(' condicion')';
-
-switchex:	  'Switch' '(' var ')' inbloque  caseswitch finbloque
-	;
-caseswitch	:'case' INT ': 'accion break final fimalswitch
-	|	'case' INT ': 'accion break final caseswitch
-
-;
-fimalswitch
-	:	'default' ': 'accion break final ;
-break	:	'break';
-mov	:	var funcion ;
-limitador
-	:	var comparacion val | var comparacion var
-	
->>>>>>> 411493181feae00efed54a57814c6cf5b75128c8
 	;
 
-comparacion : '<>' | '<=' | '>='| '=='|'>'|'<'
+final	:	 ';'
 	;
 
-<<<<<<< HEAD
 expr	:	TD decl
 	|	decl
 	;
@@ -62,43 +18,22 @@ decl	:	ID  '=' val
 	|	ID  signo
 	|	ID
 	|	QUERY_VAR
-=======
-accion	: 'ok'
 	;
-
-funcion	: '++' | '--'
->>>>>>> 411493181feae00efed54a57814c6cf5b75128c8
-	;
-iniciofor	: var '='val
-	;
-finalex	: 
-	;
-condicion	: var comparacion val
-	|	var comparacion val conjun condicion
+signo	:	',' decl 
 	;
 val	:	INT
 	|	FLOAT
 	;
-var	:	ID
-;
-conjun	: '||' | '&&'
-	;
-	
-	
-funciones	:	vacia|retorna;
-vacia	:	MA void ID inbloque accion finbloque
-	|	MA MA void ID inbloque accion finbloque
-	;
-void	:	'void';
-retorna	:	MA TD ID inbloque accion  return finbloque
-	|	MA MA TD ID inbloque accion return finbloque
-	;
-return	:	'return' var final
-	|	'return' val final
-	;
 
+
+    
+BOOLEAN	
+	:	'true'
+	|	'false'
+	;
 	
-MA	:	'Public'
+MA	
+	:	'Public'
 	|	'Protected'
 	|	'Private'
 	|	'Final'
@@ -108,51 +43,129 @@ MA	:	'Public'
 	|	'Object'
 	;
 	
-TD	:	'Boolean'
-	|	'byte'
+TD	
+	:	'byte'
+	|	'Boolean'
 	|	'double'
+	|	'int'
+	|	'float'
 	|	'long'
 	|	'slust'
 	;
-<<<<<<< HEAD
 
 QUERY_VAR 
-	:	'var' ID '=' QUERY
+	:	'var' QUERY_ID '=' QUERY
+	;
+
+QUERY_ID
+	:	ID
 	;
 
 QUERY	
-	:	FROM_CLAUSE JOIN_CLAUSE WHERE_CLAUSE GROUP_BY_CLAUSE ORDER_BY_CLAUSE SELECT_CLAUSE
+	:	FROM_CLAUSE+ JOIN_CLAUSE* WHERE_CLAUSE* GROUP_BY_CLAUSE* ORDER_BY_CLAUSE* SELECT_CLAUSE
 	;
 
 FROM_CLAUSE
-	:	FROM_CLAUSE
-	|	FROM
+	:	'From' QUERY_ID 'in' DATA_ORIGIN
 	;
 
-FROM	
-	:	'From' ID 'in'  DATA_ORIGIN
+DATA_ORIGIN
+	:
+	;
+
+JOIN_CLAUSE
+	:	'Join'  
+	;
+
+WHERE_CLAUSE
+	:	'Where'  QUERY_ID  WHERE_CONDITION  
+	;
+
+WHERE_CONDITION
+	:	LOGIC_CONDITION ( WHERE_LOGIC_OPERATOR LOGIC_CONDITION )+
+	;
+
+WHERE_LOGIC_OPERATOR
+	:	'&&'
+	|	'||'
+	;
+
+LOGIC_CONDITION
+	:	E ( LOGIC_OPERATOR E )+ 
+	;
+	
+LOGIC_OPERATOR
+	:	'>'
+	|	'<'
+	|	'>='
+	|	'<='
+	|	'=='
+	|	'!='
+	;
+
+E
+	: 	( ID (AP ID)+ )* 
+	;
+
+AP	
+	:	'+'
+	|	'-'
+	|	'*'
+	|	'/'
+	;
+
+GROUP_BY_CLAUSE
+	:
+	;
+
+ORDER_BY_CLAUSE
+	:
+	;
+
+SELECT_CLAUSE
+	:
 	;
 
 
 ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')* 
-=======
-	
-ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
->>>>>>> 411493181feae00efed54a57814c6cf5b75128c8
     ;
-	
-	
-	
-INT :	'0'..'9'+
-    ;
-    
+
+INT 
+	:	'0'..'9'+
+   	;
 
 FLOAT
-    :   ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
-    |   '.' ('0'..'9')+ EXPONENT?
-    |   ('0'..'9')+ EXPONENT
-    ;
+   	:   ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
+    	|   '.' ('0'..'9')+ EXPONENT?
+    	|   ('0'..'9')+ EXPONENT
+    	;
+
+STRING
+    	:  '"' ( ESC_SEQ | ~('\\'|'"') )* '"'
+    	;
 
 fragment
 EXPONENT : ('e'|'E') ('+'|'-')? ('0'..'9')+ ;
 
+fragment
+HEX_DIGIT : ('0'..'9'|'a'..'f'|'A'..'F') ;
+
+fragment
+ESC_SEQ
+    :   '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
+    |   UNICODE_ESC
+    |   OCTAL_ESC
+    ;
+
+fragment
+OCTAL_ESC
+    :   '\\' ('0'..'3') ('0'..'7') ('0'..'7')
+    |   '\\' ('0'..'7') ('0'..'7')
+    |   '\\' ('0'..'7')
+    ;
+
+fragment
+UNICODE_ESC
+    :   '\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
+    ;
+    
