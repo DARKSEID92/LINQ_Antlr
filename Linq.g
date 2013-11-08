@@ -1,5 +1,7 @@
-grammar Linq;program	:	initial+
+grammar Linq;
+program	:	initial+
 	;
+
 initial	:	expr final
 	|	MA expr final
 	;
@@ -7,13 +9,15 @@ initial	:	expr final
 final	:	 ';'
 	;
 
-expr	:	TD decl 
+expr	:	TD decl
+	|	decl
 	;
 
 decl	:	ID  '=' val
 	|	ID  '=' val signo
 	|	ID  signo
-	|	ID 
+	|	ID
+	|	QUERY_VAR
 	;
 signo	:	',' decl 
 	;
@@ -47,6 +51,23 @@ TD
 	|	'float'
 	|	'long'
 	|	'slust'
+	;
+
+QUERY_VAR 
+	:	'var' ID '=' QUERY
+	;
+
+QUERY	
+	:	FROM_CLAUSE JOIN_CLAUSE WHERE_CLAUSE GROUP_BY_CLAUSE ORDER_BY_CLAUSE SELECT_CLAUSE
+	;
+
+FROM_CLAUSE
+	:	FROM_CLAUSE
+	|	FROM
+	;
+
+FROM	
+	:	'From' ID 'in'  DATA_ORIGIN
 	;
 
 
