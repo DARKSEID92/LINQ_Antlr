@@ -4,6 +4,7 @@ program	:	initial+
 
 initial	:	expr final
 	|	MA expr final
+	|	QUERY_EXP final
 	;
 
 final	:	 ';'
@@ -17,15 +18,12 @@ decl	:	ID  '=' val
 	|	ID  '=' val signo
 	|	ID  signo
 	|	ID
-	|	QUERY_VAR
 	;
 signo	:	',' decl 
 	;
 val	:	INT
 	|	FLOAT
 	;
-
-
     
 BOOLEAN	
 	:	'true'
@@ -53,7 +51,7 @@ TD
 	|	'slust'
 	;
 
-QUERY_VAR 
+QUERY_EXP 
 	:	'var' QUERY_ID '=' QUERY
 	;
 
@@ -70,11 +68,15 @@ FROM_CLAUSE
 	;
 
 DATA_ORIGIN
-	:
+	:	//Aqui entran las listas que se van a consultar, recuerdo que hay listas de objetos
 	;
 
 JOIN_CLAUSE
-	:	'Join'  
+	:	'Join'  QUERY_ID DATA_ORIGIN 'on' QUERY_ID'.'ATTRIBUTE 'equals' QUERY_ID'.'ATTRIBUTE 
+	;
+
+ATTRIBUTE
+	:	//Atributos de objetos ej. objeto.atrubuto
 	;
 
 WHERE_CLAUSE
@@ -115,11 +117,11 @@ AP
 	;
 
 GROUP_BY_CLAUSE
-	:
+	:	//Solo aplica para listas de objetos mirar a ver si se puede validar
 	;
 
 ORDER_BY_CLAUSE
-	:
+	:	//Solo aplica para listas de objetos mirar a ver si se puede validar
 	;
 
 SELECT_CLAUSE
