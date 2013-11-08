@@ -1,14 +1,58 @@
 grammar Linq;
+<<<<<<< HEAD
 program	:	initial+
 	;
 
 initial	:	expr final
 	|	MA expr final
+=======
+
+program: initial+;
+
+initial: initialex;
+
+initialex: ifex | forex | switchex | whilex | dowhilex | funciones;
+
+
+
+ifex: 'If' '('  condicion ')' inbloque  accion finbloque else;
+else	:	
+	|'Else'inbloque  accion finbloque else
+;
+
+final	:	 ';' ;
+
+inbloque:	'{';
+
+finbloque
+	:	'}';
+
+forex: 'For' '(' iniciofor     final limitador   final mov   ')' inbloque accion  finbloque;
+
+whilex: 'While' '(' condicion')' inbloque accion  finbloque;
+
+dowhilex: 'Do' inbloque accion finbloque 'While' '(' condicion')';
+
+switchex:	  'Switch' '(' var ')' inbloque  caseswitch finbloque
+	;
+caseswitch	:'case' INT ': 'accion break final fimalswitch
+	|	'case' INT ': 'accion break final caseswitch
+
+;
+fimalswitch
+	:	'default' ': 'accion break final ;
+break	:	'break';
+mov	:	var funcion ;
+limitador
+	:	var comparacion val | var comparacion var
+	
+>>>>>>> 411493181feae00efed54a57814c6cf5b75128c8
 	;
 
-final	:	 ';'
+comparacion : '<>' | '<=' | '>='| '=='|'>'|'<'
 	;
 
+<<<<<<< HEAD
 expr	:	TD decl
 	|	decl
 	;
@@ -18,22 +62,43 @@ decl	:	ID  '=' val
 	|	ID  signo
 	|	ID
 	|	QUERY_VAR
+=======
+accion	: 'ok'
 	;
-signo	:	',' decl 
+
+funcion	: '++' | '--'
+>>>>>>> 411493181feae00efed54a57814c6cf5b75128c8
+	;
+iniciofor	: var '='val
+	;
+finalex	: 
+	;
+condicion	: var comparacion val
+	|	var comparacion val conjun condicion
 	;
 val	:	INT
 	|	FLOAT
 	;
-
-
-    
-BOOLEAN	
-	:	'true'
-	|	'false'
+var	:	ID
+;
+conjun	: '||' | '&&'
 	;
 	
-MA	
-	:	'Public'
+	
+funciones	:	vacia|retorna;
+vacia	:	MA void ID inbloque accion finbloque
+	|	MA MA void ID inbloque accion finbloque
+	;
+void	:	'void';
+retorna	:	MA TD ID inbloque accion  return finbloque
+	|	MA MA TD ID inbloque accion return finbloque
+	;
+return	:	'return' var final
+	|	'return' val final
+	;
+
+	
+MA	:	'Public'
 	|	'Protected'
 	|	'Private'
 	|	'Final'
@@ -43,15 +108,13 @@ MA
 	|	'Object'
 	;
 	
-TD	
-	:	'byte'
-	|	'Boolean'
+TD	:	'Boolean'
+	|	'byte'
 	|	'double'
-	|	'int'
-	|	'float'
 	|	'long'
 	|	'slust'
 	;
+<<<<<<< HEAD
 
 QUERY_VAR 
 	:	'var' ID '=' QUERY
@@ -72,44 +135,24 @@ FROM
 
 
 ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')* 
+=======
+	
+ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
+>>>>>>> 411493181feae00efed54a57814c6cf5b75128c8
     ;
-
-INT 
-	:	'0'..'9'+
-   	;
+	
+	
+	
+INT :	'0'..'9'+
+    ;
+    
 
 FLOAT
-   	:   ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
-    	|   '.' ('0'..'9')+ EXPONENT?
-    	|   ('0'..'9')+ EXPONENT
-    	;
-
-STRING
-    	:  '"' ( ESC_SEQ | ~('\\'|'"') )* '"'
-    	;
+    :   ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
+    |   '.' ('0'..'9')+ EXPONENT?
+    |   ('0'..'9')+ EXPONENT
+    ;
 
 fragment
 EXPONENT : ('e'|'E') ('+'|'-')? ('0'..'9')+ ;
 
-fragment
-HEX_DIGIT : ('0'..'9'|'a'..'f'|'A'..'F') ;
-
-fragment
-ESC_SEQ
-    :   '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
-    |   UNICODE_ESC
-    |   OCTAL_ESC
-    ;
-
-fragment
-OCTAL_ESC
-    :   '\\' ('0'..'3') ('0'..'7') ('0'..'7')
-    |   '\\' ('0'..'7') ('0'..'7')
-    |   '\\' ('0'..'7')
-    ;
-
-fragment
-UNICODE_ESC
-    :   '\\' 'u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
-    ;
-    
